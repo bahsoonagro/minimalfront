@@ -14,7 +14,8 @@ function App() {
 
   // Fetch backend status when app loads
   useEffect(() => {
-    fetch("http://localhost:5000/api/ping")
+    fetch("fetch("https://minimalback-production.up.railway.app")
+")
       .then((res) => res.json())
       .then((data) => setStatus(data.message))
       .catch(() => setStatus("Backend unreachable"));
