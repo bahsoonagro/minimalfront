@@ -1,25 +1,41 @@
 import React, { useEffect, useState } from "react";
 
 function App() {
-  const [status, setStatus] = useState("Checking...");
+  const [message, setMessage] = useState("");
+  const [rawMaterials, setRawMaterials] = useState([]);
 
-  // Set your Railway backend URL here
-  const API_BASE = "https://minimalback-production.up.railway.app";
-
-  // Test backend connectivity
+  // Fetch test endpoint
   useEffect(() => {
-    fetch(`${API_BASE}/api/test`)
+    fetch("https://minimalback-production.up.railway.app/api/test")
       .then((res) => res.json())
-      .then((data) => setStatus(data.message))
-      .catch(() => setStatus("Backend unreachable"));
+      .then((data) => setMessage(data.message))
+      .catch((err) => console.error("Error fetching /api/test:", err));
+  }, []);
+
+  // Fetch raw materials
+  useEffect(() => {
+    fetch("https://minimalback-production.up.railway.app/api/raw-materials")
+      .then((res) => res.json())
+      .then((data) => setRawMaterials(data))
+      .catch((err) => console.error("Error fetching /api/raw-materials:", err));
   }, []);
 
   return (
-    <div style={{ fontFamily: "Arial", padding: "20px" }}>
-      <h1>🔗 Minimal React Frontend</h1>
-      <p>
-        <strong>Backend status:</strong> {status}
-      </p>
+    <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
+      <h1>Frontend ✅</h1>
+      <h2>Backend Test Message:</h2>
+      <p>{message || "Loading..."}</p>
+
+      <h2>Raw Materials:</h2>
+      {rawMaterials.length > 0 ? (
+        <ul>
+          {rawMaterials.map((item) => (
+            <li key={item.id || item._id}>{item.name}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No raw materials yet.</p>
+      )}
     </div>
   );
 }
