@@ -1,28 +1,27 @@
-// app.js
-import express from "express";
-import cors from "cors";
+import React, { useEffect, useState } from "react";
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+function App() {
+  const [status, setStatus] = useState("Checking...");
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+  // Set your Railway backend URL here
+  const API_BASE = "https://minimalback-production.up.railway.app";
 
-// Root route
-app.get("/", (req, res) => {
-  res.send("Backend is running ✅ at https://minimalback-production.up.railway.app");
-});
+  // Test backend connectivity
+  useEffect(() => {
+    fetch(`${API_BASE}/api/test`)
+      .then((res) => res.json())
+      .then((data) => setStatus(data.message))
+      .catch(() => setStatus("Backend unreachable"));
+  }, []);
 
-// Example API route
-app.get("/api/hello", (req, res) => {
-  res.json({
-    message: "Hello from Railway backend 🚂",
-    url: "https://minimalback-production.up.railway.app/api/hello",
-  });
-});
+  return (
+    <div style={{ fontFamily: "Arial", padding: "20px" }}>
+      <h1>🔗 Minimal React Frontend</h1>
+      <p>
+        <strong>Backend status:</strong> {status}
+      </p>
+    </div>
+  );
+}
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`✅ Server is running on port ${PORT}`);
-});
+export default App;
